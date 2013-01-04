@@ -1,6 +1,7 @@
-postfix
+disclaimer
 =======
 
-Esse repositório foi criado para organizar scripts úteis para administração do Postfix e componentes relacionados, incluindo os artigos
-publicados no meu blog (http://respirandolinux.wordpress.com) e o conteúdo utilizado no curso que ministro na 4linux,
-empresa onde trabalho (http://www.4linux.com.br/cursos/cursos-postfix.html#curso-434).
+Scripts utilizados nos artigos sobre adicionar disclaimer, que são textos que serão inseridas  automaticamente no rodapé das mensagens 
+enviadas.
+
+disclaimer.sh: Script básico, retirado do livro "The Book of Postfix", que adiciona o disclaimer em todas as mensagens, não permite filtros.
