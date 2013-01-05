@@ -8,7 +8,7 @@
 INSPECT_DIR=/var/spool/filter
 SENDMAIL=/usr/sbin/sendmail
 
-#INCLUIDO PARA INCLUIR O CONTEUDO SOMENTE EM MENSAGENS ENVIADAS
+#REMETENTES QUE NAO DEVEM TER O DISCLAIMER INSERIDO
 EXCECOES_REMETENTES=/etc/postfix/excecoes_remetente
 
 # Exit codes from <sysexits.h>
