@@ -1,0 +1,36 @@
+#USER SCORES
+user_scores_dsn                 DBI:Pg:dbname=spamassassin;host=localhost
+user_scores_sql_username	spamassassin
+user_scores_sql_password	123
+
+## AUTO WHITELIST POR USUARIO
+auto_whitelist_factory Mail::SpamAssassin::SQLBasedAddrList
+
+user_awl_dsn                 DBI:Pg:dbname=spamassassin;host=localhost
+user_awl_sql_username        spamassassin
+user_awl_sql_password        123
+
+
+## Estava utilizando modulo SQL no lugar de PgSQL e apresentava erros de BYTEA
+bayes_store_module		   Mail::SpamAssassin::BayesStore::PgSQL
+
+# BAYES COM BASE POSTGRESQL
+bayes_sql_dsn                      DBI:Pg:dbname=spamassassin;host=localhost
+bayes_sql_username		   spamassassin
+bayes_sql_password		   123
+
+v310.pre
+
+# AWL - do auto-whitelist checks
+#
+loadplugin Mail::SpamAssassin::Plugin::AWL
+
+---
+
+pacotes debian: libdbd-pgsql libdbd-pg-perl
+
+Ago 27 14:06:37.477 [2764] dbg: bayes: learner_new self=Mail::SpamAssassin::Plugin::Bayes=HASH(0xb1ce708), bayes_store_module=Mail::SpamAssassin::BayesStore::PgSQL
+Ago 27 14:06:37.494 [2764] error: Can't locate DBD/Pg.pm in @INC (@INC contains: lib /usr/share/perl5 /etc/perl /usr/local/lib/perl/5.10.1 /usr/local/share/perl/5.10.1 /usr/lib/perl5 /usr/lib/perl/5.10 /usr/share/perl/5.10 /usr/local/lib/site_perl) at /usr/share/perl5/Mail/SpamAssassin/BayesStore/PgSQL.pm line 53.
+Ago 27 14:06:37.494 [2764] warn: plugin: eval failed: bayes: learner_new Mail::SpamAssassin::BayesStore::PgSQL new() failed: Can't locate DBD/Pg.pm in @INC (@INC contains: lib /usr/share/perl5 /etc/perl /usr/local/lib/perl/5.10.1 /usr/local/share/perl/5.10.1 /usr/lib/perl5 /usr/lib/perl/5.10 /usr/share/perl/5.10 /usr/local/lib/site_perl) at /usr/share/perl5/Mail/SpamAssassin/BayesStore/PgSQL.pm line 53.
+Ago 27 14:06:37.495 [2764] warn: BEGIN failed--compilation aborted at /usr/share/perl5/Mail/SpamAssassin/BayesStore/PgSQL.pm line 53.
+
