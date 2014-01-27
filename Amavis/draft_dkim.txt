@@ -1,0 +1,10 @@
+### DKIM 
+$enable_dkim_verification = 0; #não iremos verificar DKIM, apenas assinar
+$enable_dkim_signing = 1;
+#assinar mensagens da matriz
+dkim_key('matriz.com.br', 'default', '/etc/dkim/keys/matriz.pem');
+#assinar mensagens da filial
+dkim_key('filial.com.br', 'default', '/etc/dkim/keys/filial.pem');
+#
+@dkim_signature_options_bysender_maps = (
+{ '.' => { ttl => 21*24*3600, c => 'relaxed/simple' } } );
