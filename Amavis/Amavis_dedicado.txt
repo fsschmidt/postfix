@@ -1,0 +1,44 @@
+## PUBLICADO EM: http://respirandolinux.wordpress.com/2014/02/04/configurando-o-amavis-em-um-servidor-dedicado/
+## AUTOR: FABIO SOARES SCHMIDT - 04-02-2013
+
+Olá ! Neste artigo apresento as configurações para separar o Amavis em um servidor dedicado. Em alguns ambientes isso pode ser necessário devido ao trafego de mensagens, onde o MTA (neste exemplo o Postfix)e Amavis precisam ser separados em servidores dedicados.
+Neste exemplo o servidor Postfix é o host mail.matriz.com.br (192.168.200.116) e o servidor dedicado para o Amavis é o host amavis.matriz.com.br (192.168.200.115)
+
+Primeiramente, no servidor Postfix edite o main.cf adicionando a seguinte linha:
+content_filter = smtp-amavis:amavis.matriz.com.br:10024
+Ainda no servidor Postfix, edite o arquivo master.cf adicionando o seguinte serviço:
+
+0.0.0.0:10025 inet n - y - - smtpd
+-o content_filter=
+-o local_recipient_maps=
+-o relay_recipient_maps=
+-o smtpd_restriction_classes=
+-o smtpd_delay_reject=no
+-o smtpd_client_restrictions=
+-o smtpd_helo_restrictions=
+-o smtpd_sender_restrictions=
+-o smtpd_recipient_restrictions=permit_mynetworks,reject
+-o smtpd_data_restrictions=reject_unauth_pipelining
+-o smtpd_end_of_data_restrictions=
+-o mynetworks=127.0.0.0/8,192.168.200.115/32
+-o smtpd_error_sleep_time=0
+-o smtpd_soft_error_limit=1001
+-o smtpd_hard_error_limit=1000
+-o smtpd_client_connection_count_limit=0
+-o smtpd_client_connection_rate_limit=0
+-o receive_override_options=no_header_body_checks,no_unknown_recipient_checks
+-o recipient_bcc_maps=
+-o sender_bcc_maps=
+Deve-se prestar atenção no parâmetro mynetworks do serviço, onde deve ser incluído o IP do servidor do Amavis para entrega das mensagens. Feito isso, após reiniciar o serviço, o Postfix já irá entregar as mensagens com as configurações feitas.
+
+No servidor Amavis, precisamos colocar o serviço para escutar na porta 10024 e aceitar conexões do nosso MTA. No Debian e derivados o arquivo 20-debian_defaults pode ser editado para incluir as configurações ou o 50-user, que vem limpo justamente para as configurações adicionais. Para distribuições baseadas em Red Hat, o Amavis utiliza um único arquivo de configuração.
+@inet_acl = qw(127.0.0.1 192.168.200.115 192.168.200.116 [::1]); # Controle acesso - Informar os IPs dos MTAs e do servidor amavis
+$inet_socket_bind = '0.0.0.0'; # Onde escutar - Colocar as interfaces onde o Amavis deve aceitar conexões
+$inet_socket_port = 10024; # Porta
+### Encaminhando para o Postfix ###
+$notify_method = 'smtp:[mail.matriz.com.br]:10025';
+$forward_method = 'smtp:[mail.matriz.com.br]:10025';
+###
+Efetuada as configurações, reinicie o serviço do Amavis e tente enviar uma mensagem, nos logs do Amavis deve aparecer a conexão do MTA:
+
+Feb  4 13:30:27 amavis amavis[3052]: (03052-01) Passed CLEAN {RelayedInternal}, MYNETS LOCAL [192.168.200.116]:51347 [192.168.200.116] <joao@matriz.com.br> -> <joao@matriz.com.br>, Message-ID: <67917efa9170c57c59fd791eb0e83c47@matriz.com.br>, mail_id: zQYc-U7HehsQ, Hits: -1.326, size: 596, queued_as: 46FAC5A6DC, dkim_new=default:matriz.com.br, 2981 ms
