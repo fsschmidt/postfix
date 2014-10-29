@@ -1,0 +1,31 @@
+Olá ! Em um post anterior eu tratei as configurações necessárias para configurar o Postfix para efetuar relay em um servidor que exige autenticação: https://respirandolinux.wordpress.com/2014/10/25/postfix-efetuando-relay-em-hosts-que-exigem-autenticacao/
+
+Ocorre que muitas vezes é necessário efetuar o relay no servidor utilizando as portas SUBMISSION (587) ou SMTPS (465). Para que seja possível efetuar essa entrega, as configurações abaixo podem ser utilizadas (exemplo com destino utilizando submission):
+
+O parâmetro que define o host para onde será encaminhada a mensagem é o relayhost:
+
+Exemplo:
+
+relayhost = servidor-externo.laboratorio.com.br
+
+Agora para fazer com que o Postfix autentique ao efetuar o relay e inicie a encriptação exigida pelo serviço SUBMISSION, insira as configurações conforme abaixo:
+
+relayhost = servidor-externo.laboratorio.com.br:587
+smtp_sasl_password_maps= hash:/etc/postfix/sasl_passwd
+smtp_use_tls = yes
+smtp_sasl_auth_enable = yes
+smtp_sasl_security_options = noanonymous, noplaintext
+smtp_sasl_tls_security_options = noanonymous
+
+O grande detalhe aqui está no parâmetro smtp_sasl_password_maps, onde iremos inserir no arquivo criado o usuário e senha para autenticação no host definido em relayhost.
+
+O arquivo deve ser criado no seguinte formato:
+
+hostname-do-relayhost.fqdn:porta                     usuario:senha
+
+Nosso exemplo:
+
+servidor-externo.laboratorio.com.br:587              usuario:senha
+
+Efetuadas as configurações, rode o postmap no arquivo /etc/postfix/sasl_passwd e efetue um reload no serviço do Postfix.
+
