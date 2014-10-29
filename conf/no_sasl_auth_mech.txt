@@ -1,0 +1,42 @@
+Olá ! Neste post irei tratar um erro comummente encontrado ao tentar habilitar autenticação no Postfix. Basicamente, o erro ocorrer devido ao Postfix não ter os mecanismos necessários para a autenticação configurada.
+
+Nos logs do Postfix as mensagens abaixo costumam ser exibidas:
+
+warning: xsasl_cyrus_server_get_mechanism_list: no mechanism available
+
+fatal: no SASL authentication mechanisms
+
+Primeiramente, é preciso que você identifique no seu arquivo de configuração quais mecanismos você está utilizando, caso não tenha nada específico, o Postfix irá utilizar o mecanismo PLAIN.
+
+Para instalar o suporte aos mecanismos:
+
+Red Hat / CentOS:
+
+yum install cyrus-sasl-plain
+
+Debian / Ubuntu:
+
+apt-get install libsasl2-modules
+
+Em um ambiente, precisei instalar também o mecanismo para suportar o mecanismo DIGEST-MD5 e como estava utilizando CentOS precisei instalar o pacote cyrus-sasl-md5.
+
+Segue uma relação dos mecanismos encontrados em uma instalação com CentOS:
+
+cyrus-sasl-gs2.i686 : GS2 support for Cyrus SASL
+cyrus-sasl-gs2.x86_64 : GS2 support for Cyrus SASL
+cyrus-sasl-gssapi.i686 : GSSAPI authentication support for Cyrus SASL
+cyrus-sasl-gssapi.x86_64 : GSSAPI authentication support for Cyrus SASL
+cyrus-sasl-ldap.i686 : LDAP auxprop support for Cyrus SASL
+cyrus-sasl-ldap.x86_64 : LDAP auxprop support for Cyrus SASL
+cyrus-sasl-lib.i686 : Shared libraries needed by applications which use Cyrus SASL
+cyrus-sasl-lib.x86_64 : Shared libraries needed by applications which use Cyrus SASL
+cyrus-sasl-md5.i686 : CRAM-MD5 and DIGEST-MD5 authentication support for Cyrus SASL
+cyrus-sasl-md5.x86_64 : CRAM-MD5 and DIGEST-MD5 authentication support for Cyrus SASL
+cyrus-sasl-ntlm.i686 : NTLM authentication support for Cyrus SASL
+cyrus-sasl-ntlm.x86_64 : NTLM authentication support for Cyrus SASL
+cyrus-sasl-plain.i686 : PLAIN and LOGIN authentication support for Cyrus SASL
+cyrus-sasl-plain.x86_64 : PLAIN and LOGIN authentication support for Cyrus SASL
+cyrus-sasl-scram.i686 : SCRAM auxprop support for Cyrus SASL
+cyrus-sasl-scram.x86_64 : SCRAM auxprop support for Cyrus SASL
+cyrus-sasl-sql.i686 : SQL auxprop support for Cyrus SASL
+cyrus-sasl-sql.x86_64 : SQL auxprop support for Cyrus SASL
