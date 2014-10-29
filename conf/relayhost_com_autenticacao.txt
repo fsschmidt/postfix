@@ -1,0 +1,25 @@
+Olá ! É muito comum para administradores de correio eletrônico precisar configurar o servidor para efetuar relay em outro host. Porém geralmente essa prática é feita tendo o IP do servidor liberado no servidor de relay. Neste post irei tratar a configuração que pode ser feita no Postfix caso o host exija autenticação.
+
+O parametro que define o host para onde será encaminhada a mensagem é o relayhost:
+
+Exemplo:
+
+relayhost = servidor-externo.laboratorio.com.br
+
+Agora para fazer com que o Postfix autentique ao efetuar o relay insira as configurações conforme abaixo:
+
+smtp_sasl_auth_enable= yes
+smtp_sasl_password_maps= hash:/etc/postfix/sasl-passwd
+smtp_sasl_security_options= noanonymous
+
+O grande detalhe aqui está no parametro smtp_sasl_password_maps, onde iremos inserir no arquivo criado o usuário e senha para autenticação no host definido em relayhost.
+
+O arquivo deve ser criado no seguinte formato:
+
+hostname-do-relayhost.fqdn                     usuario:senha
+
+Nosso exemplo:
+
+servidor-externo.laboratorio.com.br               usuario:senha
+
+Efetuadas as configurações, rode o postmap no arquivo /etc/postfix/sasl-passwd e efetue um reload no serviço do Postfix.
