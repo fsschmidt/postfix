@@ -1,0 +1,18 @@
+#!/bin/bash
+for OUTPUT in $(cat dominios.txt)
+
+do
+
+	mkdir -p /etc/opendkim/keys/$OUTPUT
+
+	cd /etc/opendkim/keys/$OUTPUT
+
+	opendkim-genkey -r -d $OUTPUT
+
+	chown opendkim:opendkim default.private
+
+	echo "default._domainkey.$OUTPUT $OUTPUT:default:/etc/opendkim/keys/$OUTPUT/default.private" >> /home/ubuntu/keytable
+
+        echo "*@$OUTPUT default._domainkey.$OUTPUT" >> /home/ubuntu/signingtable
+
+done
