@@ -1,4 +1,5 @@
 #!/bin/bash
+#As chaves DKIM serão criadas com o selector "default"
 for OUTPUT in $(cat dominios.txt)
 
 do
