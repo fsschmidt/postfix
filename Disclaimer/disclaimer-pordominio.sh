@@ -9,7 +9,7 @@ INSPECT_DIR=/var/spool/filter
 SENDMAIL=/usr/sbin/sendmail
 
 #REMETENTES QUE NAO DEVEM TER O DISCLAIMER INSERIDO
-EXCECOES_REMETENTES=/etc/postfix/excessoes_remetente
+EXCECOES_REMETENTES=/etc/postfix/excecoes_remetente
 
 #DEFINIMOS QUAL DISCLAIMER DEVE SER INSERIDO PARA CADA DOMINIO
 DISCLAIMER1=/etc/postfix/dominios-disclaimer1.txt
