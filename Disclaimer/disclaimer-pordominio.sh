@@ -1,6 +1,4 @@
 #!/bin/sh
-# Fabio S. Schmidt <fabio@improve.inf.br>
-# 06/Jan/2013
 # Contempla excecoes de remetentes que nao terao o disclaimer inserido
 # e disclaimers especificos de acordo com o dominio do remetente
 
